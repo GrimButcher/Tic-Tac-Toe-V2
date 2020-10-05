@@ -111,17 +111,19 @@ void game_done(std::vector<std::vector<std::string>> rows, bool &game_ss1, bool 
 }
 
 void game_flow(std::vector<std::vector<std::string>> &rows, int row_choice, int column_choice, bool &game_ss1, bool &game_ss2){
+
 	player_choice(rows, row_choice, column_choice);
 	game_done(rows, game_ss1, game_ss2);
 	if(game_ss1 != true && game_ss2 != true){
 		comp_choice(rows);
 		game_done(rows, game_ss1, game_ss2);
 	}
+	
 }
 
 void game_end(bool game_ss1, bool game_ss2){
-	if(game_ss1 == true && game_ss2 == false) std::cout<<"You Won!!!!\n";
-	else if(game_ss1 == false && game_ss2 == true)std::cout<<"The comp Won.:(\n";
+	if(game_ss1 && game_ss2 == false) std::cout<<"You Won!!!!\n";
+	else if(game_ss1 == false && game_ss2)std::cout<<"The comp Won.:(\n";
 	else{
 		std::cout<<"It's a tie!\n";
 	}
