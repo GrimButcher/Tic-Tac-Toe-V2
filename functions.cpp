@@ -16,7 +16,7 @@ void change_board(const int row_choice, const int column_choice, std::vector<std
 		rows[row_choice-1][column_choice-1] = "x";
 		print_board(rows);
 	}else if(is_comp == true){
-		rows[row_choice-1][column_choice-1] = "o";
+		rows[row_choice][column_choice] = "o";
 		print_board(rows);
 	}
 }
@@ -54,14 +54,42 @@ void comp_choice(std::vector<std::vector<std::string>> &rows){
 	while(comp_con == false){
 		srand(time(NULL));
 		random1 = rand()%3;
+		while(random1 < 0 || random1 > 2){
+			random1 = rand()%3;
+			if(random1 == 3){
+				random1 = 0;
+			}
+		}
 		random2 = rand()%3;
-		comp_con = (rows[random1-1][random2 -1] == "-")? true: false;
+		while(random2 < 0 || random2 > 2){
+			random2 = rand()%3;
+			if(random2 == 3){
+				random2 = 0;
+			}
+		}
+		comp_con = (rows[random1][random2] == "-")? true: false;
 	}
 	change_board(random1, random2, rows, true);
 }
 
-void game_flow(std::vector<std::vector<std::string>> &rows, int row_choice, int column_choice, bool game_done){
-	if(game_done == false)
-		player_choice(rows, row_choice, column_choice);
-		comp_choice(rows);
+void game_done(std::vector<std::vector<std::string>> rows, bool &game_ss){
+	for(auto c : rows){
+		if((c[0] == "x" && c[1] == "x" && c[2] == "x") || (c[0] == "o" && c[1] == "o" && c[2] == "o")){
+			game_ss = true;
+		}
+	}
+	for(int i = 0; i <= 2; i++){
+		if((rows[0][i] == "x" && rows[1][i] == "x" && rows[2][i] == "x") || (rows[0][i] == "o" && rows[1][i] == "o" && rows[2][i] == "o")){
+			game_ss = true;
+		}
+	}
+	if((rows[0][0] == "x" && rows[1][1] == "x" && rows[2][2] == "x")||(rows[0][0] == "o" && rows[1][1] == "o" && rows[2][2] == "o")){
+		game_ss = true;
+	}
+}
+
+void game_flow(std::vector<std::vector<std::string>> &rows, int row_choice, int column_choice, bool &game_ss){
+	player_choice(rows, row_choice, column_choice);
+	comp_choice(rows);
+	game_done(rows, game_ss);
 }
