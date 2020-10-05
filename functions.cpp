@@ -25,7 +25,7 @@ void player_choice(std::vector<std::vector<std::string>> &rows, int &row_choice,
 	bool player_done = false;
 
 	while(player_done == false){
-		std::cout<<"Lets begin with finding out which row and column you are going to be placing your mark\n";
+		std::cout<<"Now which row and column you are going to be placing your mark\n";
 		
 		std::cout<<"Start by inputting your row\n";
 		std::cin>>row_choice;
@@ -72,24 +72,57 @@ void comp_choice(std::vector<std::vector<std::string>> &rows){
 	change_board(random1, random2, rows, true);
 }
 
-void game_done(std::vector<std::vector<std::string>> rows, bool &game_ss){
+void game_done(std::vector<std::vector<std::string>> rows, bool &game_ss1, bool &game_ss2){
 	for(auto c : rows){
-		if((c[0] == "x" && c[1] == "x" && c[2] == "x") || (c[0] == "o" && c[1] == "o" && c[2] == "o")){
-			game_ss = true;
+		if(c[0] == "x" && c[1] == "x" && c[2] == "x"){
+			game_ss1 = true;
+		}else if(c[0] == "o" && c[1] == "o" && c[2] == "o"){
+			game_ss2 = true;
 		}
 	}
 	for(int i = 0; i <= 2; i++){
-		if((rows[0][i] == "x" && rows[1][i] == "x" && rows[2][i] == "x") || (rows[0][i] == "o" && rows[1][i] == "o" && rows[2][i] == "o")){
-			game_ss = true;
+		if(rows[0][i] == "x" && rows[1][i] == "x" && rows[2][i] == "x"){
+			game_ss1 = true;
+		}else if(rows[0][i] == "o" && rows[1][i] == "o" && rows[2][i] == "o"){
+			game_ss2 = true;
 		}
 	}
-	if((rows[0][0] == "x" && rows[1][1] == "x" && rows[2][2] == "x")||(rows[0][0] == "o" && rows[1][1] == "o" && rows[2][2] == "o")){
-		game_ss = true;
+	if(rows[0][0] == "x" && rows[1][1] == "x" && rows[2][2] == "x"){
+		game_ss1 = true;
+	}else if(rows[0][0] == "o" && rows[1][1] == "o" && rows[2][2] == "o"){
+		game_ss2 = true;
+	}
+
+	int counter = 0;
+	if(game_ss1 == false && game_ss2 == false){
+		for(auto c : rows){
+			for(std::string f : c){
+				if(f != "-"){
+					counter++;
+				}
+			}
+		}
+	}
+	if(counter == 9){
+		game_ss1 = true;
+		game_ss2 = true;
+	}
+
+}
+
+void game_flow(std::vector<std::vector<std::string>> &rows, int row_choice, int column_choice, bool &game_ss1, bool &game_ss2){
+	player_choice(rows, row_choice, column_choice);
+	game_done(rows, game_ss1, game_ss2);
+	if(game_ss1 != true && game_ss2 != true){
+		comp_choice(rows);
+		game_done(rows, game_ss1, game_ss2);
 	}
 }
 
-void game_flow(std::vector<std::vector<std::string>> &rows, int row_choice, int column_choice, bool &game_ss){
-	player_choice(rows, row_choice, column_choice);
-	comp_choice(rows);
-	game_done(rows, game_ss);
+void game_end(bool game_ss1, bool game_ss2){
+	if(game_ss1 == true && game_ss2 == false) std::cout<<"You Won!!!!\n";
+	else if(game_ss1 == false && game_ss2 == true)std::cout<<"The comp Won.:(\n";
+	else{
+		std::cout<<"It's a tie!\n";
+	}
 }
